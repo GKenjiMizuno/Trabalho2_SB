@@ -1,0 +1,25 @@
+
+
+Este programa simula um carregador de memória que aloca espaço para um programa em blocos de memória predefinidos.
+
+Compilação e Execução
+
+1.Compile o código Assembly:
+   nasm -f elf32 carregador.asm -o carregador.o
+
+2.Compile e link o programa em C:
+   gcc -m32 carregador.c carregador.o -o carregador
+
+3.Execute o programa:
+
+   ./carregador <tamanho_programa> <endereco_1> <tamanho_1> [...]
+
+
+Exemplo de Uso
+
+./carregador 100 200 300
+
+Estrutura
+-functions.asm: Implementação em Assembly.
+-main.c: Interface para entrada e chamada das funções em Assembly.
+
