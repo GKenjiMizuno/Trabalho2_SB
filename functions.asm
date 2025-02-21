@@ -65,6 +65,10 @@ print_int:
     push ebp
     mov ebp, esp
 
+    push ebx
+    push esi
+    push edi
+
     ; valor em EAX
     mov eax, [ebp+8]
 
@@ -128,7 +132,7 @@ print_int:
     ; Agora buffer local [esp] tem a string decimal correta.
     ; Precisamos imprimir usando print_message. Então passamos o ponteiro.
 
-    push dword [esp]      ; push endereço do buffer local
+    push esp      ; push endereço do buffer local
     call print_message
     add esp, 4
 
@@ -136,6 +140,10 @@ print_int:
     add esp, 16
 
 .fim:
+
+    pop edi
+    pop esi
+    pop ebx
     pop ebp
     ret
 
@@ -153,6 +161,8 @@ section .text
 print_allocation:
     push ebp
     mov ebp, esp
+    push ebx
+    push edi
 
     ; start = [ebp+8], size = [ebp+12]
     ; end = start + size - 1
@@ -186,15 +196,15 @@ print_allocation:
     call print_message
     add esp, 4
 
+    pop edi
+    pop ebx 
     pop ebp
     ret
 
-;----------------------------------------------------------------------------
-; Função: calcular_alocacao(int tamanho, int num_blocos, int *blocos)
 ; Faz a lógica de alocar o 'tamanho' do programa, usando até 'num_blocos' blocos
 ; Caso não caiba, imprime msg_no_space.
 ; Caso caiba parcial ou totalmente, chama print_allocation pra cada fatia.
-;----------------------------------------------------------------------------
+
 calcular_alocacao:
     push ebp
     mov ebp, esp
@@ -221,6 +231,8 @@ calcular_alocacao:
 
     cmp esi, ebx
     jge .no_space       ; se excedeu número de blocos, não há espaço suficiente
+
+    mov ecx, [ebp+16]
 
     ; blocos[esi*2]     => endereço do bloco
     ; blocos[esi*2 +1]  => tamanho do bloco
